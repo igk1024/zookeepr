@@ -5,6 +5,7 @@ const app = express(); // instantiate the server,
 app.listen(PORT, () => {
   console.log(`API server now on port ${PORT}!`);
 });
+//11.2.2
 
 //creating a route that the front-end can request data from
 
@@ -50,6 +51,12 @@ function filterByQuery(query, animalsArray) {
     return filteredResults;
   }
 
+//takes in id and array of animals and returns single animal object
+function findById(id, animalsArray) {
+    const result = animalsArray.filter(animal => animal.id === id)[0];
+    return result;
+  }
+  
 
 //add the route
 app.get('/api/animals', (req, res) => {
@@ -58,4 +65,14 @@ app.get('/api/animals', (req, res) => {
         results = filterByQuery(req.query, results);
     }
     res.json(results);
+});
+
+//added 404 if no record of animal exists
+app.get('/api/animals/:id', (req, res) => {
+  const result = findById(req.params.id, animals);
+  if (result) {
+    res.json(result);
+  } else {
+    res.send(404);
+  }
 });
